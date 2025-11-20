@@ -10,17 +10,17 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-app.set("view engine", "ejs");
-app.set("views", "./views");
-
-app.get("/", (req, res) => {
-  res.render("index");
-});
-
+// app.set("view engine", "ejs");
+// app.set("views", "./views");
 
 // app.get("/", (req, res) => {
-//   res.send("Hello World");
+//   res.render("index");
 // });
+
+
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
 
 app.post("/api/assessment", async (req, res) => {
   const { submission_id, submitted_at, user, assessment } = req.body;
