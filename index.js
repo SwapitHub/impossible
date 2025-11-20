@@ -1,13 +1,13 @@
 const express = require("express");
+require('dotenv').config();
 const { createClient } = require("@supabase/supabase-js");
 const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
 
-const supabaseUrl = "https://keshwtpiouwcamvjbyve.supabase.co";
-const supabaseKey =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtlc2h3dHBpb3V3Y2FtdmpieXZlIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MzUyNDcyNCwiZXhwIjoyMDc5MTAwNzI0fQ.loLEWzBXI4OmWBXARSksa1DIwJ4_x0_P_QUv2QyEM94"; // Replace with your Supabase API Key
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 app.post("/api/assessment", async (req, res) => {
