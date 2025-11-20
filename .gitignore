@@ -5,3 +5,4 @@
 .yarn/install-state.gz
 *.zip
 .vercel
+.env

@@ -10,6 +10,10 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY; 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+app.get('/', (req, res) => {
+  res.send('Hello World');
+});
+
 app.post("/api/assessment", async (req, res) => {
   const { submission_id, submitted_at, user, assessment } = req.body;
 
