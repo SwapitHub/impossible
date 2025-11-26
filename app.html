@@ -1,0 +1,247 @@
+<form method="get" data-name="Personal Ecosystem Assessment" id="wf-form-Personal-Ecosystem-Assessment">
+
+    <div>
+        <h1>Beliefs about capabilities</h1>
+        <section>
+            <label for="beliefs-capabilities">How would you describe your beliefs about your current
+                capabilities?</label>
+            <select id="beliefs-capabilities" name="beliefs_capabilities" required>
+                <option value="">Select one...</option>
+                <option value="I feel confident in what I can do">I feel confident in what I can do</option>
+                <option value="I feel capable but underutilized">I feel capable but underutilized</option>
+                <option value="I’m unsure or inconsistent in my self-belief">I’m unsure or inconsistent in my
+                    self-belief</option>
+                <option value="I often doubt my abilities">I often doubt my abilities</option>
+                <option value="I’m rebuilding or redefining what I believe about myself">I’m rebuilding or redefining
+                    what I believe about myself</option>
+            </select>
+        </section>
+
+        <section>
+            <label for="beliefs-detail">Add detail about your beliefs</label>
+            <textarea id="beliefs-detail" name="beliefs_detail" maxlength="5000" placeholder="Example Text"></textarea>
+        </section>
+    </div>
+
+    <div>
+        <h2>Feelings about change/growth</h2>
+        <label>When you think about change or growth, what do you most often feel?</label>
+        <div id="feelings-change">
+            <label><input type="checkbox" name="excitement"> Excitement</label>
+            <label><input type="checkbox" name="fear"> Fear</label>
+            <label><input type="checkbox" name="curiosity"> Curiosity</label>
+            <label><input type="checkbox" name="overwhelm"> Overwhelm</label>
+            <label><input type="checkbox" name="motivation"> Motivation</label>
+            <label><input type="checkbox" name="doubt"> Doubt</label>
+            <label><input type="checkbox" name="stability"> Stability</label>
+            <label><input type="checkbox" name="other"> Other</label>
+        </div>
+
+        <section>
+            <label for="feelings-change-detail">Add detail about how you experience change and growth</label>
+            <textarea id="feelings-change-detail" name="feelings_change_detail"></textarea>
+        </section>
+    </div>
+
+    <button type="submit" id="submitButton">Submit</button>
+</form>
+
+<script>
+    // Event listener for form submission
+    document.getElementById("wf-form-Personal-Ecosystem-Assessment").addEventListener("submit", async function (event) {
+        event.preventDefault(); // Prevent form from submitting the traditional way
+
+        // Collecting the data from the form
+
+        // 1. Get the values of the select field (beliefs_capabilities)
+        const beliefsCapabilities = document.getElementById("beliefs-capabilities").value;
+        const beliefsDetail = document.getElementById("beliefs-detail").value;
+
+        // 2. Feelings about change/growth Get the selected checkbox values
+        const feelingsChange = [];
+        document.querySelectorAll('input[name="excitement"]:checked').forEach(checkbox => feelingsChange
+            .push(checkbox.name));
+        document.querySelectorAll('input[name="fear"]:checked').forEach(checkbox => feelingsChange.push(
+            checkbox.name));
+        document.querySelectorAll('input[name="curiosity"]:checked').forEach(checkbox => feelingsChange
+            .push(checkbox.name));
+        document.querySelectorAll('input[name="overwhelm"]:checked').forEach(checkbox => feelingsChange
+            .push(checkbox.name));
+        document.querySelectorAll('input[name="motivation"]:checked').forEach(checkbox => feelingsChange
+            .push(checkbox.name));
+        document.querySelectorAll('input[name="doubt"]:checked').forEach(checkbox => feelingsChange.push(
+            checkbox.name));
+        document.querySelectorAll('input[name="stability"]:checked').forEach(checkbox => feelingsChange
+            .push(checkbox.name));
+        document.querySelectorAll('input[name="other"]:checked').forEach(checkbox => feelingsChange.push(
+            checkbox.name));
+
+        const feelingsChangeDetail = document.getElementById("feelings-change-detail").value;
+
+
+        //3. Strongest skills
+        const StrongestSkillsChange = [];
+        document.querySelectorAll('input[name="Technical-or-professional-skills"]:checked').forEach(
+            checkbox => StrongestSkillsChange.push(checkbox.name));
+        document.querySelectorAll('input[name="Leadership-or-communication"]:checked').forEach(checkbox =>
+            StrongestSkillsChange.push(checkbox.name));
+        document.querySelectorAll('input[name="Creative-or-artistic"]:checked').forEach(checkbox =>
+            StrongestSkillsChange.push(checkbox.name));
+        document.querySelectorAll('input[name="Relational-or-interpersonal"]:checked').forEach(checkbox =>
+            StrongestSkillsChange.push(checkbox.name));
+        document.querySelectorAll('input[name="Lived-experience-life-wisdom"]:checked').forEach(checkbox =>
+            StrongestSkillsChange.push(checkbox.name));
+        document.querySelectorAll('input[name="I-m-not-sureField-3B"]:checked').forEach(checkbox =>
+            StrongestSkillsChange.push(checkbox.name));
+
+        const StrongestSkillsChangeDetail = document.getElementById("strongest-skills-detail").value;
+
+
+        // 4. Most-used skills today
+        const mostUsedChange = [];
+        document.querySelectorAll('input[name="problem-solving"]:checked').forEach(
+            checkbox => mostUsedChange.push(checkbox.name));
+        document.querySelectorAll('input[name="relationship-building"]:checked').forEach(checkbox =>
+            mostUsedChange.push(checkbox.name));
+        document.querySelectorAll('input[name="creativity"]:checked').forEach(checkbox =>
+            mostUsedChange.push(checkbox.name));
+        document.querySelectorAll('input[name="strategy-or-planning"]:checked').forEach(checkbox =>
+            mostUsedChange.push(checkbox.name));
+        document.querySelectorAll('input[name="persistence"]:checked').forEach(checkbox =>
+            mostUsedChange.push(checkbox.name));
+        document.querySelectorAll('input[name="empathy"]:checked').forEach(checkbox =>
+            mostUsedChange.push(checkbox.name));
+        document.querySelectorAll('input[name="adaptability"]:checked').forEach(checkbox =>
+            mostUsedChange.push(checkbox.name));
+        document.querySelectorAll('input[name="otherField-4B"]:checked').forEach(checkbox =>
+            mostUsedChange.push(checkbox.name));
+
+        const mostUsedDetail = document.getElementById("most-used-skills-detail").value;
+
+
+        // 5. Current support system
+        const supportSystem = document.getElementById("support-system").value;
+        const supportSystemDetail = document.getElementById("support-system-detail").value;
+
+
+        // 6. Desired relationships
+        const DesiredRelationships = [];
+        document.querySelectorAll('input[name="professional-career-connections"]:checked').forEach(
+            checkbox => DesiredRelationships.push(checkbox.name));
+        document.querySelectorAll('input[name="mentors-or-guides"]:checked').forEach(checkbox =>
+            DesiredRelationships.push(checkbox.name));
+        document.querySelectorAll('input[name="creative-collaborators"]:checked').forEach(checkbox =>
+            DesiredRelationships.push(checkbox.name));
+        document.querySelectorAll('input[name="personal-friendships"]:checked').forEach(checkbox =>
+            DesiredRelationships.push(checkbox.name));
+        document.querySelectorAll('input[name="a-community-of-shared-goals"]:checked').forEach(checkbox =>
+            DesiredRelationships.push(checkbox.name));
+        document.querySelectorAll('input[name="i-m-not-sure-yetField-6B"]:checked').forEach(checkbox =>
+            DesiredRelationships.push(checkbox.name));
+
+        const DesiredRelationshipsDetail = document.getElementById("desired-relationships-detail").value;
+
+
+            // 7. Day-to-day attitude
+        const DayToDayAttitude = [];
+        document.querySelectorAll('input[name="resilient"]:checked').forEach(
+            checkbox => DayToDayAttitude.push(checkbox.name));
+        document.querySelectorAll('input[name="anxious"]:checked').forEach(checkbox =>
+            DayToDayAttitude.push(checkbox.name));
+        document.querySelectorAll('input[name="hopeful"]:checked').forEach(checkbox =>
+            DayToDayAttitude.push(checkbox.name));
+        document.querySelectorAll('input[name="driven"]:checked').forEach(checkbox =>
+            DayToDayAttitude.push(checkbox.name));
+        document.querySelectorAll('input[name="stuck"]:checked').forEach(checkbox =>
+            DayToDayAttitude.push(checkbox.name));
+        document.querySelectorAll('input[name="resourceful"]:checked').forEach(checkbox =>
+            DayToDayAttitude.push(checkbox.name));
+             document.querySelectorAll('input[name="steady"]:checked').forEach(checkbox =>
+            DayToDayAttitude.push(checkbox.name));
+             document.querySelectorAll('input[name="curious"]:checked').forEach(checkbox =>
+            DayToDayAttitude.push(checkbox.name));
+             document.querySelectorAll('input[name="otherField-7B"]:checked').forEach(checkbox =>
+            DayToDayAttitude.push(checkbox.name));
+
+        const DayToDayAttitudeDetail = document.getElementById("day-to-day-attitude-detail").value;
+
+        const formData = {
+            submission_id: "pe-assessment-00123", // You can set this dynamically as needed
+            submitted_at: new Date().toISOString(), // Timestamp for submission
+            user: {
+                name: "Jordan Example", // User name (can be dynamically set)
+                email: "jordan@example.com", // User email (can be dynamically set)
+            },
+            assessment: {
+                beliefs_capabilities: {
+                    choice: beliefsCapabilities,
+                    detail: beliefsDetail,
+                },
+                feelings_change: {
+                    choices: feelingsChange, // Array of selected feelings
+                    detail: feelingsChangeDetail, // Detail about feelings change
+                },
+                strongest_skills: {
+                    choices: StrongestSkillsChange,
+                    detail: StrongestSkillsChangeDetail
+                },
+                most_used_skills: {
+                    choices: mostUsedChange,
+                    detail: mostUsedDetail
+                },
+                support_system: {
+                    choice: supportSystem,
+                    detail: supportSystemDetail
+                },
+                desired_relationships: {
+                    choices: DesiredRelationships,
+                    detail: DesiredRelationshipsDetail
+                },
+                day_to_day_attitude: {
+                    choices: DayToDayAttitude,
+                    detail: DayToDayAttitudeDetail
+                },
+                obstacle_response: {
+                    choice: "I pause and regroup",
+                    detail: "I usually take a step back, think through options, and then decide what to do next."
+                },
+                strongest_resources: {
+                    choices: ["Knowledge or expertise", "Supportive relationships",
+                        "Creativity or vision"
+                    ],
+                    detail: "I have strong domain expertise and a lot of ideas, plus a partner who really supports me."
+                },
+                digital_presence: {
+                    level: "Yes, minimally",
+                    platforms: "LinkedIn (mostly passive), Instagram (personal), I’m considering starting a Substack."
+                },
+                final_reflection: "I feel like I’m at an inflection point. I’ve built a solid foundation but haven’t yet gone after the thing that feels truly ‘impossible’ for me."
+            }
+            // Add other sections similarly...
+        }
+
+
+        // Send data to API
+        try {
+            const response = await fetch("https://impossible-iota.vercel.app/api/assessment", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData), // Send form data as JSON
+            });
+
+            const data = await response.json(); // Parse JSON response
+
+            if (response.ok) {
+                alert("Form submitted successfully!");
+                console.log(data); // Display the API response (or use it to show insights)
+            } else {
+                alert("Error submitting form: " + data.error);
+            }
+        } catch (error) {
+            console.error("Error:", error);
+            alert("There was an error submitting your form.");
+        }
+    });
+</script>

@@ -1,11 +1,15 @@
 const { OpenAI } = require("openai");
 const express = require("express");
+const cors = require("cors");
+
 require("dotenv").config();
 const { createClient } = require("@supabase/supabase-js");
 const app = express();
 const port = process.env.PORT || 5000;
 
+
 app.use(express.json());
+app.use(cors());
 
 const client = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -20,15 +24,33 @@ app.get("/", (req, res) => {
   res.send("Hello World like ");
 });
 
+async function generateSubmissionId() {
+  // Count existing rows
+  const { count, error } = await supabase
+    .from("assessments")
+    .select("*", { count: "exact", head: true });
+
+  if (error)
+    throw new Error("Error generating submission_id: " + error.message);
+
+  const nextNumber = count + 1;
+
+  // Format: pe-assessment-00001
+  const formatted = String(nextNumber).padStart(5, "0");
+
+  return `pe-assessment-${formatted}`;
+}
+
 app.post("/api/assessment", async (req, res) => {
-  const { submission_id, submitted_at, user, assessment } = req.body;
+  const { submitted_at, user, assessment } = req.body;
 
   // Check if the required fields are present
-  if (!submission_id || !submitted_at || !assessment) {
+  if (!submitted_at || !assessment) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
   try {
+    const submission_id = await generateSubmissionId();
     // Step 1: Call OpenAI API to analyze the assessment data and generate insights
     const response = await client.responses.create({
       model: "gpt-4", // Use a valid model like "gpt-4" (update this if a newer model is available)
@@ -139,7 +161,6 @@ app.post("/api/assessment", async (req, res) => {
   }
 });
 
-
 // Get API to fetch insights based on submission_id
 app.get("/api/insights/:submission_id", async (req, res) => {
   const { submission_id } = req.params;
@@ -156,13 +177,15 @@ app.get("/api/insights/:submission_id", async (req, res) => {
     }
 
     if (!data || data.length === 0) {
-      return res.status(404).json({ error: "No insights found for this submission_id" });
+      return res
+        .status(404)
+        .json({ error: "No insights found for this submission_id" });
     }
 
     // Return all insights
     res.status(200).json({
       message: "Insights fetched successfully",
-      insights: data,  // Return all results as an array
+      insights: data, // Return all results as an array
       submission_id,
     });
   } catch (error) {
@@ -171,7 +194,6 @@ app.get("/api/insights/:submission_id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
