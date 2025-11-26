@@ -17,7 +17,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Test route
 app.get("/", (req, res) => {
-  res.send("Hello World");
+  res.send("Hello World like ");
 });
 
 app.post("/api/assessment", async (req, res) => {
