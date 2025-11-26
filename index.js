@@ -1,3 +1,4 @@
+const { OpenAI } = require("openai");
 const express = require("express");
 require("dotenv").config();
 const { createClient } = require("@supabase/supabase-js");
@@ -6,18 +7,15 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
+
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// app.set("view engine", "ejs");
-// app.set("views", "./views");
-
-// app.get("/", (req, res) => {
-//   res.render("index");
-// });
-
-
+// Test route
 app.get("/", (req, res) => {
   res.send("Hello World");
 });
@@ -31,7 +29,55 @@ app.post("/api/assessment", async (req, res) => {
   }
 
   try {
-    // Insert the data into the 'assessments' table without authorization check
+    // Step 1: Call OpenAI API to analyze the assessment data and generate insights
+    const response = await client.responses.create({
+      model: "gpt-4", // Use a valid model like "gpt-4" (update this if a newer model is available)
+      input: [
+        {
+          role: "system",
+          content:
+            "You are an expert assessment analyst. Generate a clear, helpful summary & insights.",
+        },
+        {
+          role: "user",
+          content: `Here is the full assessment JSON data:\n\n${JSON.stringify(
+            assessment,
+            null,
+            2
+          )}\n\nNow generate:\n1. Key personality insights\n2. Strengths summary\n3. Growth opportunities\n4. Career guidance\n5. Emotional tone analysis`,
+        },
+      ],
+    });
+
+    // Step 2: Debug: Log the full response to check for missing 'choices' field
+
+    // Step 3: Check if OpenAI response contains the 'output_text' field
+    if (!response || !response.output_text) {
+      throw new Error(
+        "Invalid response from OpenAI API: Missing 'output_text' field"
+      );
+    }
+
+    const openAiResponse = response.output_text;
+    console.log("OpenAI API Response:", openAiResponse);
+
+    // Step 3: Insert the insights data into the 'insights' table in Supabase
+    const { data: insightsData, error: insightsError } = await supabase
+      .from("insights")
+      .insert([
+        {
+          submission_id, // submission_id jo ki aapne request body se liya hai
+          insights: openAiResponse, // OpenAI ka response jo insights me store kiya hai
+        },
+      ]);
+
+    if (insightsError) {
+      throw new Error(
+        `Error inserting insights data into database: ${insightsError.message}`
+      );
+    }
+
+    // Step 4: Insert the data into the 'assessments' table in Supabase
     const { data, error } = await supabase.from("assessments").insert([
       {
         submission_id,
@@ -77,11 +123,52 @@ app.post("/api/assessment", async (req, res) => {
     ]);
 
     if (error) {
-      return res.status(500).json({ error: error.message });
+      throw new Error(`Error inserting data into database: ${error.message}`);
     }
 
-    res.status(201).json({ message: "Assessment data successfully stored" });
+    // Step 5: Return both the success message and the generated insights from OpenAI
+    res.status(201).json({
+      message: "Assessment data successfully stored",
+      insights: openAiResponse,
+      submission_id,
+    });
   } catch (error) {
+    // Handle errors: Return detailed error message
+    console.error("Error occurred:", error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+// Get API to fetch insights based on submission_id
+app.get("/api/insights/:submission_id", async (req, res) => {
+  const { submission_id } = req.params;
+
+  try {
+    // Step 1: Fetch the insights from the Supabase database based on submission_id
+    const { data, error } = await supabase
+      .from("insights")
+      .select("insights")
+      .eq("submission_id", submission_id)
+      .single();  // Fetch only one record (assuming submission_id is unique)
+
+    if (error) {
+      throw new Error(`Error fetching insights: ${error.message}`);
+    }
+
+    if (!data) {
+      return res.status(404).json({ error: "No insights found for this submission_id" });
+    }
+
+    // Step 2: Return the insights data as the response
+    res.status(200).json({
+      message: "Insights fetched successfully",
+      insights: data.insights,
+      submission_id,
+    });
+  } catch (error) {
+    // Handle errors: Return detailed error message
+    console.error("Error occurred:", error);
     res.status(500).json({ error: error.message });
   }
 });
