@@ -145,25 +145,24 @@ app.get("/api/insights/:submission_id", async (req, res) => {
   const { submission_id } = req.params;
 
   try {
-    // Step 1: Fetch the insights from the Supabase database based on submission_id
+    // Fetch all the insights matching the submission_id
     const { data, error } = await supabase
       .from("insights")
       .select("insights")
-      .eq("submission_id", submission_id)
-      .single();  // Fetch only one record (assuming submission_id is unique)
+      .eq("submission_id", submission_id);
 
     if (error) {
       throw new Error(`Error fetching insights: ${error.message}`);
     }
 
-    if (!data) {
+    if (!data || data.length === 0) {
       return res.status(404).json({ error: "No insights found for this submission_id" });
     }
 
-    // Step 2: Return the insights data as the response
+    // Return all insights
     res.status(200).json({
       message: "Insights fetched successfully",
-      insights: data.insights,
+      insights: data,  // Return all results as an array
       submission_id,
     });
   } catch (error) {
@@ -172,6 +171,7 @@ app.get("/api/insights/:submission_id", async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
