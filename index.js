@@ -20,7 +20,7 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Test route
 app.get("/", (req, res) => {
-  res.send("Hello World like ");
+  res.send("Hello World likes this ");
 });
 
 async function generateSubmissionId() {
