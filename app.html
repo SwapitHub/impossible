@@ -2,12 +2,12 @@
 <script src="https://cdn.jsdelivr.net/npm/dompurify@2.4.0/dist/purify.min.js"></script>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const form = document.getElementById(
-            "wf-form-Personal-Ecosystem-Assessment"
-        );
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById(
+      "wf-form-Personal-Ecosystem-Assessment"
+    );
 
-           // Define the extractSection function
+    // Define the extractSection function
     function extractSection(regex, content) {
       const match = content.match(regex);
       if (match) {
@@ -19,245 +19,263 @@
       }
     }
 
-        form.addEventListener("submit", async function (event) {
-            event.preventDefault(); // stop Webflow default form action
-             // Show the loader before sending data
-            document.getElementById('loader-main').style.display = 'block';
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault(); // stop Webflow default form action
+      
+      document.getElementById("loader-main").style.display = "block";
 
-            // Helper: get checkbox values inside a wrapper div
-            function getCheckedValues(sectionId) {
-                return Array.from(
-                    document.querySelectorAll(
-                        `#${sectionId} input[type="checkbox"]:checked`
-                    )
-                ).map((cb) => cb.name);
-            }
+      // Helper: get checkbox values inside a wrapper div
+      function getCheckedValues(sectionId) {
+        return Array.from(
+          document.querySelectorAll(
+            `#${sectionId} input[type="checkbox"]:checked`
+          )
+        ).map((cb) => cb.name);
+      }
 
-            /* -------------------------------
+      /* -------------------------------
                      📌 COLLECT ALL FIELD DATA
                   --------------------------------*/
 
-            // 1. Beliefs
-            const beliefsCapabilities = document.getElementById(
-                "beliefs-capabilities"
-            ).value;
-            const beliefsDetail = document.getElementById(
-                "beliefs-capabilities-detai"
-            ).value;
+      // 1. Beliefs
+      const beliefsCapabilities = document.getElementById(
+        "beliefs-capabilities"
+      ).value;
+      const beliefsDetail = document.getElementById(
+        "beliefs-capabilities-detai"
+      ).value;
 
-            // 2. Feelings
-            const feelingsChange = getCheckedValues("feelings-change");
-            const feelingsChangeDetail = document.getElementById(
-                "feelings-change-detail"
-            ).value;
+      // 2. Feelings
+      const feelingsChange = getCheckedValues("feelings-change");
+      const feelingsChangeDetail = document.getElementById(
+        "feelings-change-detail"
+      ).value;
 
-            // 3. Strongest Skills
-            const strongestSkills = getCheckedValues("strongest-skills");
-            const strongestSkillsDetail = document.getElementById(
-                "strongest-skills-detail"
-            ).value;
+      // 3. Strongest Skills
+      const strongestSkills = getCheckedValues("strongest-skills");
+      const strongestSkillsDetail = document.getElementById(
+        "strongest-skills-detail"
+      ).value;
 
-            // 4. Most Used Skills
-            const mostUsedSkills = getCheckedValues("most-used-skills");
-            const mostUsedDetail = document.getElementById(
-                "most-used-skills-detail"
-            ).value;
+      // 4. Most Used Skills
+      const mostUsedSkills = getCheckedValues("most-used-skills");
+      const mostUsedDetail = document.getElementById(
+        "most-used-skills-detail"
+      ).value;
 
-            // 5. Support System
-            const supportSystem = document.getElementById("support-system").value;
-            const supportSystemDetail = document.getElementById(
-                "support-system-detail"
-            ).value;
+      // 5. Support System
+      const supportSystem = document.getElementById("support-system").value;
+      const supportSystemDetail = document.getElementById(
+        "support-system-detail"
+      ).value;
 
-            // 6. Desired Relationships
-            const desiredRelationships = getCheckedValues("desired-relationships");
-            const desiredRelationshipsDetail = document.getElementById(
-                "desired-relationships-detail"
-            ).value;
+      // 6. Desired Relationships
+      const desiredRelationships = getCheckedValues("desired-relationships");
+      const desiredRelationshipsDetail = document.getElementById(
+        "desired-relationships-detail"
+      ).value;
 
-            // 7. Day-to-day Attitude
-            const dayToDayAttitude = getCheckedValues("day-to-day-attitude");
-            const dayToDayAttitudeDetail = document.getElementById(
-                "day-to-day-attitude-detail"
-            ).value;
+      // 7. Day-to-day Attitude
+      const dayToDayAttitude = getCheckedValues("day-to-day-attitude");
+      const dayToDayAttitudeDetail = document.getElementById(
+        "day-to-day-attitude-detail"
+      ).value;
 
-            // 8. Obstacle Response
-            const obstacleResponse =
-                document.getElementById("obstacle-response").value;
-            const obstacleResponseDetail = document.getElementById(
-                "obstacle-response-detail"
-            ).value;
+      // 8. Obstacle Response
+      const obstacleResponse =
+        document.getElementById("obstacle-response").value;
+      const obstacleResponseDetail = document.getElementById(
+        "obstacle-response-detail"
+      ).value;
 
-            // 9. Strongest Resources
-            const strongestResources = getCheckedValues("strongest-resources");
-            const strongestResourcesDetail = document.getElementById(
-                "strongest-resources-detail"
-            ).value;
+      // 9. Strongest Resources
+      const strongestResources = getCheckedValues("strongest-resources");
+      const strongestResourcesDetail = document.getElementById(
+        "strongest-resources-detail"
+      ).value;
 
-            // 10. Digital presence
-            const digitalPresenceLevel = document.getElementById(
-                "digital-presence-level"
-            ).value;
-            const digitalPresencePlatforms = document.getElementById(
-                "digital-presence-platforms"
-            ).value;
+      // 10. Digital presence
+      const digitalPresenceLevel = document.getElementById(
+        "digital-presence-level"
+      ).value;
+      const digitalPresencePlatforms = document.getElementById(
+        "digital-presence-platforms"
+      ).value;
 
-            // 11. Final reflection
-            const finalReflection = document.getElementById("final-reflection").value;
+      // 11. Final reflection
+      const finalReflection = document.getElementById("final-reflection").value;
 
-            /* ----------------------------------
+      /* ----------------------------------
                       📌 Build final JSON
                   -----------------------------------*/
-            const formData = {
-                submission_id: "pe-" + Date.now(),
-                submitted_at: new Date().toISOString(),
+      const formData = {
+        submission_id: "pe-" + Date.now(),
+        submitted_at: new Date().toISOString(),
 
-                user: {
-                    name: "Jordan Example",
-                    email: "jordan@example.com",
-                },
+        user: {
+          name: "Jordan Example",
+          email: "jordan@example.com",
+        },
 
-                assessment: {
-                    beliefs_capabilities: {
-                        choice: beliefsCapabilities,
-                        detail: beliefsDetail,
-                    },
-                    feelings_change: {
-                        choices: feelingsChange,
-                        detail: feelingsChangeDetail,
-                    },
-                    strongest_skills: {
-                        choices: strongestSkills,
-                        detail: strongestSkillsDetail,
-                    },
-                    most_used_skills: {
-                        choices: mostUsedSkills,
-                        detail: mostUsedDetail,
-                    },
-                    support_system: {
-                        choice: supportSystem,
-                        detail: supportSystemDetail,
-                    },
-                    desired_relationships: {
-                        choices: desiredRelationships,
-                        detail: desiredRelationshipsDetail,
-                    },
-                    day_to_day_attitude: {
-                        choices: dayToDayAttitude,
-                        detail: dayToDayAttitudeDetail,
-                    },
-                    obstacle_response: {
-                        choice: obstacleResponse,
-                        detail: obstacleResponseDetail,
-                    },
-                    strongest_resources: {
-                        choices: strongestResources,
-                        detail: strongestResourcesDetail,
-                    },
-                    digital_presence: {
-                        level: digitalPresenceLevel,
-                        platforms: digitalPresencePlatforms,
-                    },
-                    final_reflection: finalReflection,
-                },
-            };
+        assessment: {
+          beliefs_capabilities: {
+            choice: beliefsCapabilities,
+            detail: beliefsDetail,
+          },
+          feelings_change: {
+            choices: feelingsChange,
+            detail: feelingsChangeDetail,
+          },
+          strongest_skills: {
+            choices: strongestSkills,
+            detail: strongestSkillsDetail,
+          },
+          most_used_skills: {
+            choices: mostUsedSkills,
+            detail: mostUsedDetail,
+          },
+          support_system: {
+            choice: supportSystem,
+            detail: supportSystemDetail,
+          },
+          desired_relationships: {
+            choices: desiredRelationships,
+            detail: desiredRelationshipsDetail,
+          },
+          day_to_day_attitude: {
+            choices: dayToDayAttitude,
+            detail: dayToDayAttitudeDetail,
+          },
+          obstacle_response: {
+            choice: obstacleResponse,
+            detail: obstacleResponseDetail,
+          },
+          strongest_resources: {
+            choices: strongestResources,
+            detail: strongestResourcesDetail,
+          },
+          digital_presence: {
+            level: digitalPresenceLevel,
+            platforms: digitalPresencePlatforms,
+          },
+          final_reflection: finalReflection,
+        },
+      };
 
-            console.log("only form data:", formData);
-            /* -------------------------------------
+      console.log("only form data:", formData);
+      /* -------------------------------------
                      📌 SEND to API
                   --------------------------------------*/
-            try {
-                const response = await fetch(
-                    "https://impossible-iota.vercel.app/api/assessment", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify(formData),
-                    }
-                );
+      try {
+        const response = await fetch(
+          "https://impossible-iota.vercel.app/api/assessment",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(formData),
+          }
+        );
 
-                const data = await response.json();
+        const data = await response.json();
 
-                if (response.ok) {
-                    console.log("Form submission successful:", data);
+        if (response.ok) {
+          console.log("Form submission successful:", data);
 
-                    const submissionId = data.submission_id;
+          const submissionId = data.submission_id;
 
-                    // Fetch insights using the submission_id
-                    const insightsResponse = await fetch(`https://impossible-iota.vercel.app/api/insights/${submissionId}`);
-                    const insightsData = await insightsResponse.json();
+          // Fetch insights using the submission_id
+          const insightsResponse = await fetch(
+            `https://impossible-iota.vercel.app/api/insights/${submissionId}`
+          );
+          const insightsData = await insightsResponse.json();
 
-                    if (insightsResponse.ok) {
-                        console.log("Insights fetched:", insightsData);
+          if (insightsResponse.ok) {
+            console.log("Insights fetched:", insightsData);
 
-                        // Get insights content from the response
-                        const insightsContent = insightsData.insights[0].insights; // First item in the array
+            // Get insights content from the response
+            const insightsContent = insightsData.insights[0].insights; // First item in the array
 
-                        // Function to safely extract matches from the insights string
-                        //   function extractSection(regex, content) {
-                        //     const match = content.match(regex);
-                        //     if (match) {
-                        //         return match[1] ? match[1].trim() : ""; // Return matched content or empty string
-                        //     } else {
-                        //         return "";
-                        //     }
-                        // }
-// Extract sections with updated regex
-            const title = extractSection(/(?:\*\*Title\*\*:)([\s\S]+?)(?=\*\*|$)/, insightsContent);
-            const shortOverview = extractSection(/(?:\*\*Short Overview\*\*:)([\s\S]+?)(?=\*\*|$)/, insightsContent);
-            const readinessNextMoves = extractSection(/(?:Readiness & Next Moves:)([\s\S]+?)(?=\n|$)/, insightsContent); // Updated regex
+            
+            const title = extractSection(
+              /(?:\*\*Title\*\*:)([\s\S]+?)(?=\*\*|$)/,
+              insightsContent
+            );
+            const shortOverview = extractSection(
+              /(?:\*\*Short Overview\*\*:)([\s\S]+?)(?=\*\*|$)/,
+              insightsContent
+            );
+            const readinessNextMoves = extractSection(
+              /Closing:\s*Readiness\s*(?:&|And)\s*Next Moves\**:?\s*([\s\S]+)/i,
+              insightsContent
+            );
+            
 
-            console.log("Title:", title);
-            console.log("Short Overview:", shortOverview);
-            console.log("Readiness & Next Moves:", readinessNextMoves);
-                        // Dynamically generate the HTML for the insights
-                        const insightsHtml = `
+          
+            const insightsHtml = `
                             <h2>${title}</h2>
                             <p><strong>Short Overview:</strong> ${shortOverview}</p>
                             <h3>Beliefs & Mindset</h3>
-                            <p>${extractSection(/Section 1: Beliefs & Mindset([\s\S]*?)Section 2:/, insightsContent)}</p>
+                            <p>${extractSection(
+                              /Section 1: Beliefs & Mindset([\s\S]*?)Section 2:/,
+                              insightsContent
+                            )}</p>
                             <h3>Skills & Experience</h3>
-                            <p>${extractSection(/Section 2: Skills & Experience([\s\S]*?)Section 3:/, insightsContent)}</p>
+                            <p>${extractSection(
+                              /Section 2: Skills & Experience([\s\S]*?)Section 3:/,
+                              insightsContent
+                            )}</p>
                             <h3>Relationships & Support</h3>
-                            <p>${extractSection(/Section 3: Relationships & Support([\s\S]*?)Section 4:/, insightsContent)}</p>
+                            <p>${extractSection(
+                              /Section 3: Relationships & Support([\s\S]*?)Section 4:/,
+                              insightsContent
+                            )}</p>
                             <h3>Attitudes & Patterns</h3>
-                            <p>${extractSection(/Section 4: Attitudes & Patterns([\s\S]*?)Section 5:/, insightsContent)}</p>
+                            <p>${extractSection(
+                              /Section 4: Attitudes & Patterns([\s\S]*?)Section 5:/,
+                              insightsContent
+                            )}</p>
                             <h3>Assets & Resources</h3>
-                            <p>${extractSection(/Section 5: Assets & Resources([\s\S]*?)Section 6:/, insightsContent)}</p>
+                            <p>${extractSection(
+                              /Section 5: Assets & Resources([\s\S]*?)Section 6:/,
+                              insightsContent
+                            )}</p>
                             <h3>Digital Presence & Amplifiers</h3>
-                            <p>${extractSection(/Section 6: Digital Presence & Amplifiers([\s\S]*?)Closing:/, insightsContent)}</p>
+                            <p>${extractSection(
+                              /Section 6: Digital Presence & Amplifiers([\s\S]*?)Closing:/,
+                              insightsContent
+                            )}</p>
                             <h3>Readiness & Next Moves</h3>
               <p>${readinessNextMoves}</p>
                         `;
 
-                        // Sanitize the HTML content before inserting it into the page
-                        const sanitizedHtml = DOMPurify.sanitize(insightsHtml);
+            // Sanitize the HTML content before inserting it into the page
+            const sanitizedHtml = DOMPurify.sanitize(insightsHtml);
 
-                        // Inject the sanitized content into the container
-                        document.getElementById("insights-container").innerHTML = sanitizedHtml;
+            // Inject the sanitized content into the container
+            document.getElementById("insights-container").innerHTML =
+              sanitizedHtml;
 
-                        document.getElementById('loader-main').style.display = 'none';
-                        // Show the success message
-                        document.querySelector(".w-form-done").style.display = "block";
-                        
-
-                    } else {
-                        alert("❌ Error fetching insights: " + insightsData.message);
-                        document.querySelector(".w-form-fail").style.display = "block";
-                        document.getElementById('loader-main').style.display = 'none';
-                    }
-                } else {
-                    alert("❌ Error submitting form: " + data.error);
-                    document.querySelector(".w-form-fail").style.display = "block";
-                    document.getElementById('loader-main').style.display = 'none';
-                }
-            } catch (err) {
-                console.error(err);
-                alert("❌ Network error");
-                document.querySelector(".w-form-fail").style.display = "block";
-                document.getElementById('loader-main').style.display = 'none';
-            }
-        });
+            document.getElementById("loader-main").style.display = "none";
+            // Show the success message
+            document.querySelector(".w-form-done").style.display = "block";
+          } else {
+            alert("❌ Error fetching insights: " + insightsData.message);
+            document.querySelector(".w-form-fail").style.display = "block";
+            document.getElementById("loader-main").style.display = "none";
+          }
+        } else {
+          alert("❌ Error submitting form: " + data.error);
+          document.querySelector(".w-form-fail").style.display = "block";
+          document.getElementById("loader-main").style.display = "none";
+        }
+      } catch (err) {
+        console.error(err);
+        alert("❌ Network error");
+        document.querySelector(".w-form-fail").style.display = "block";
+        document.getElementById("loader-main").style.display = "none";
+      }
     });
+  });
 </script>
